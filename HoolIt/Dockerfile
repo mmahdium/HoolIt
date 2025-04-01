@@ -1,23 +1,16 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
-USER $APP_UID
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+﻿FROM mcr.microsoft.com/dotnet/sdk:10.0.100-preview.2-alpine3.21 AS build
 
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["HoolIt/HoolIt.csproj", "HoolIt/"]
-RUN dotnet restore "HoolIt/HoolIt.csproj"
+# Install NativeAOT build prerequisites
+RUN apk update \
+    && apk add --no-cache \
+       clang zlib-dev 
+
+WORKDIR /source
+
 COPY . .
-WORKDIR "/src/HoolIt"
-RUN dotnet build "HoolIt.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN cd 'HoolIt' && dotnet publish -r linux-musl-x64 -o /app 'HoolIt.csproj'
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "HoolIt.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/runtime-deps:10.0.0-preview.2-alpine3.21
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "HoolIt.dll"]
+COPY --from=build /app .
+ENTRYPOINT ["/app/HoolIt"]
