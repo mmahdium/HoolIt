@@ -1,0 +1,6 @@
+﻿services:
+  hoolit:
+    image: hoolit
+    build:
+      context: .
+      dockerfile: HoolIt/Dockerfile
