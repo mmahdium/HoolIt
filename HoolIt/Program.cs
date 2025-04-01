@@ -12,11 +12,12 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 var app = builder.Build();
+app.Urls.Clear();
+app.Urls.Add("http://0.0.0.0:5030");
 
 var subscribers = new ConcurrentDictionary<string, List<StreamWriter>>();
 var cancellationSources =
     new ConcurrentDictionary<string, CancellationTokenSource>(); // To manage cancellation per feedId
-
 
 app.MapGet("/", () => Results.Redirect("https://github.com/mmahdium/HoolIt"));
 
