@@ -8,7 +8,7 @@ RUN apk update \
 WORKDIR /source
 
 COPY . .
-RUN cd 'HoolIt' && dotnet publish -r linux-musl-x64 -o /app 'HoolIt.csproj'
+RUN dotnet publish -r linux-musl-x64 -o /app 'HoolIt.csproj'
 
 FROM mcr.microsoft.com/dotnet/runtime-deps:10.0.0-preview.2-alpine3.21
 WORKDIR /app
