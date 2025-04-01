@@ -3,7 +3,14 @@
 ## An open-source dweet.io Alternative (RIP dweet.io)
 
 **HoolIt** is an open-source project aiming to provide a simple and easy-to-use alternative to the beloved [dweet.io](http://dweet.io), which sadly is [no longer available](https://x.com/dweet_io/status/1899886062580703423).  If you were a fan of dweet.io's simplicity for quickly sending and receiving data from your "things," HoolIt is designed for you!
+---
 
+**✨ Try it instantly!**
+
+For **quick testing and exploration**, you can use a **free, publicly hosted instance of HoolIt** at:
+
+**[https://hoolit.mahdium.ir](https://hoolit.mahdium.ir)**
+---
 **It uses the exact same API scheme as dweet.io**, making migration and understanding incredibly straightforward. No signup, no setup, it just works (once you have HoolIt running, of course!).
 
 ---
@@ -28,12 +35,11 @@ Send data from your thing to the cloud by "dweeting" it with a simple HAPI web A
 **To dweet from your thing, simply call a URL like:**
 
 ```
-https://[YOUR_HOOLIT_HOST]/dweet/for/{your-thing-name}?your_key=your_value&another_key=another_value
+https://hoolit.mahdium.ir/dweet/for/{your-thing-name}?your_key=your_value&another_key=another_value
 ```
 
 **Replace:**
 
-*   `[YOUR_HOOLIT_HOST]` with the actual hostname or IP address where your HoolIt instance is running.
 *   `{your-thing-name}` with a unique name for your "thing." This is how you will identify your data streams.
 *   `your_key=your_value&another_key=another_value` with any query parameters you want to include in your dweet.
 
@@ -42,7 +48,7 @@ https://[YOUR_HOOLIT_HOST]/dweet/for/{your-thing-name}?your_key=your_value&anoth
 To send data for a thing named `my-sensor` with temperature and humidity values:
 
 ```
-https://[YOUR_HOOLIT_HOST]/dweet/for/my-sensor?temperature=25&humidity=60
+https://hoolit.mahdium.ir/dweet/for/my-sensor?temperature=25&humidity=60
 ```
 
 **Any query parameters you add to the request will be added as key-value pairs to the content of the dweet.**
@@ -70,7 +76,7 @@ HoolIt will respond with a JSON object in the following format upon successful d
 
 **Important Notes:**
 
-*   **HTTPS and HTTP Support:**  While HTTPS is recommended for secure connections (`https://[YOUR_HOOLIT_HOST]`), HoolIt also supports un-secure HTTP connections (`http://[YOUR_HOOLIT_HOST]`) for devices that might not support SSL. Use HTTP with caution, especially for sensitive data.
+*   **HTTPS and HTTP Support:**  While HTTPS is recommended for secure connections (`https://hoolit.mahdium.ir`), HoolIt also supports un-secure HTTP connections (`http://hoolit.mahdium.ir`) for devices that might not support SSL. Use HTTP with caution, especially for sensitive data.
 *   **POST Requests and JSON Body:** Sending JSON data in the body of a POST request is **not currently supported**. Only query parameters in GET requests are processed for dweeting. This is a planned feature for future releases.
 
 ---
@@ -98,12 +104,11 @@ You can create a real-time subscription to dweets using Server-Sent Events (SSE)
 **To listen for real-time dweets, make a request to:**
 
 ```
-https://[YOUR_HOOLIT_HOST]/listen/for/dweets/from/{your-thing-name}
+https://hoolit.mahdium.ir/listen/for/dweets/from/{your-thing-name}
 ```
 
 **Replace:**
 
-*   `[YOUR_HOOLIT_HOST]` with your HoolIt hostname or IP address.
 *   `{your-thing-name}` with the "thing" name you want to subscribe to.
 
 **Example:**
@@ -111,7 +116,7 @@ https://[YOUR_HOOLIT_HOST]/listen/for/dweets/from/{your-thing-name}
 To listen for real-time dweets for the thing named `my-sensor`:
 
 ```
-https://[YOUR_HOOLIT_HOST]/listen/for/dweets/from/my-sensor
+https://hoolit.mahdium.ir/listen/for/dweets/from/my-sensor
 ```
 
 **(This endpoint is designed for server-side consumption and will not work directly in a standard web browser address bar due to the nature of Server-Sent Events.)**
@@ -121,7 +126,7 @@ https://[YOUR_HOOLIT_HOST]/listen/for/dweets/from/my-sensor
 From a Unix command line or terminal, you can use `curl` to observe the real-time stream:
 
 ```bash
-curl -N https://[YOUR_HOOLIT_HOST]/listen/for/dweets/from/my-sensor
+curl -N https://hoolit.mahdium.ir/listen/for/dweets/from/my-sensor
 ```
 
 **`-N` option in `curl` is important to disable buffering and see the stream in real-time.**
@@ -142,9 +147,60 @@ Each line in the stream is a new dweet. You will need to parse each line as a JS
 
 **API Compatibility with dweet.io:**
 
-**HoolIt is designed to be fully API compatible with dweet.io for the implemented features (dweeting and real-time streaming).** You should be able to replace `dweet.io` URLs with your HoolIt host in your existing projects and code that used dweet.io for sending and listening to data, and it should function without code changes (for the compatible API parts).
+**HoolIt is designed to be fully API compatible with dweet.io for the implemented features (dweeting and real-time streaming).** You should be able to replace `dweet.io` URLs with `hoolit.mahdium.ir` (or your own self hosted instance) in your existing projects and code that used dweet.io for sending and listening to data, and it should function without code changes (for the compatible API parts).
+
 
 ---
+
+## Running HoolIt with Docker (Quick & Easy)
+
+HoolIt is easily run with Docker!  You have two main options: `docker run` for a quick start, or Docker Compose for a slightly more structured setup.
+
+**⚡️ Quick Start with `docker run`**
+
+The fastest way to run HoolIt is with this command:
+
+```bash
+docker run -p 5030:5030 -d ghcr.io/mmahdium/hoolit:main
+```
+
+This command:
+
+*   Pulls the HoolIt Docker image (`ghcr.io/mmahdium/hoolit:main`).
+*   Runs it in the background (`-d`).
+*   Makes HoolIt accessible on port `5030` of your computer (`-p 5030:5030`).
+
+You can then access HoolIt at `http://localhost:5030`
+
+**🐳  Running with Docker Compose (Slightly More Setup)**
+
+For a slightly more structured approach, especially if you plan to configure things further, use Docker Compose.
+
+1.  **Create `docker-compose.yaml`:**
+
+    ```yaml
+    version: '3.8'
+    services:
+      hoolit:
+        image: ghcr.io/mmahdium/hoolit:main
+        ports:
+          - "5030:5030"
+    ```
+
+2.  **Run in the same directory as `docker-compose.yaml`:**
+
+    ```bash
+    docker-compose up -d
+    ```
+
+This does essentially the same as `docker run` but uses a configuration file. Stop it later with `docker-compose down`.
+
+---
+
+**However, for production, privacy, or customized setups, it is highly recommended to run your own instance using Docker as described above.**  The public instance is provided as a convenience and may have limitations or be reset periodically.
+
+---
+
 
 **Contributing:**
 
