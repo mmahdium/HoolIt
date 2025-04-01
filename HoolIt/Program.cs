@@ -51,9 +51,9 @@ createApi.MapGet("/{feedId}", async (HttpContext context, string feedId) =>
         };
         var addFailedResponse =
             JsonSerializer.Serialize(faultResponse, AppJsonSerializerContext.Default.AddDweetFailedResponse);
-        context.Response.StatusCode = 500; // Set the status code to 500
-        context.Response.ContentType = "application/json"; // Set Content-Type to application/json
-        await context.Response.WriteAsync(addFailedResponse); // Write the JSON error response to the body
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsync(addFailedResponse);
         await context.Response.CompleteAsync();
 
     }
