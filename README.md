@@ -28,7 +28,7 @@ Send data from your thing to the cloud by "dweeting" it with a simple HAPI web A
 **To dweet from your thing, simply call a URL like:**
 
 ```
-https://[YOUR_HOOLIT_HOST]/create/with/{your-thing-name}?your_key=your_value&another_key=another_value
+https://[YOUR_HOOLIT_HOST]/dweet/for/{your-thing-name}?your_key=your_value&another_key=another_value
 ```
 
 **Replace:**
@@ -42,7 +42,7 @@ https://[YOUR_HOOLIT_HOST]/create/with/{your-thing-name}?your_key=your_value&ano
 To send data for a thing named `my-sensor` with temperature and humidity values:
 
 ```
-https://[YOUR_HOOLIT_HOST]/create/with/my-sensor?temperature=25&humidity=60
+https://[YOUR_HOOLIT_HOST]/dweet/for/my-sensor?temperature=25&humidity=60
 ```
 
 **Any query parameters you add to the request will be added as key-value pairs to the content of the dweet.**
