@@ -3,6 +3,7 @@
 ## An open-source dweet.io Alternative (RIP dweet.io)
 
 **HoolIt** is an open-source project aiming to provide a simple and easy-to-use alternative to the beloved [dweet.io](http://dweet.io), which sadly is [no longer available](https://x.com/dweet_io/status/1899886062580703423).  If you were a fan of dweet.io's simplicity for quickly sending and receiving data from your "things," HoolIt is designed for you!
+
 ---
 
 **✨ Try it instantly!**
@@ -10,10 +11,13 @@
 For **quick testing and exploration**, you can use a **free, publicly hosted instance of HoolIt** at:
 
 **[https://hoolit.mahdium.ir](https://hoolit.mahdium.ir)**
+
 ---
+
 **It uses the exact same API scheme as dweet.io**, making migration and understanding incredibly straightforward. No signup, no setup, it just works (once you have HoolIt running, of course!).
 
 ---
+
 ### Feature Status
 
 *   ✅ **Dweeting (Sending Data):** [![Dweeting](https://img.shields.io/badge/Dweeting-Implemented-brightgreen?style=flat-square)](https://shields.io)
@@ -23,8 +27,9 @@ For **quick testing and exploration**, you can use a **free, publicly hosted ins
 *   ✅ **Query Parameters for Dweets:** [![Query Parameters](https://img.shields.io/badge/Query%20Parameters-Implemented-brightgreen?style=flat-square)](https://shields.io)
 *   ❌ **JSONP Support:**  [![JSONP Support](https://img.shields.io/badge/JSONP%20Support-Not%20Implemented-red?style=flat-square)](https://shields.io)
 *   ❌ **Dweet History (Getting Dweets):** [![Dweet History](https://img.shields.io/badge/Dweet%20History-Not%20Implemented-red?style=flat-square)](https://shields.io)
+
 ---
----
+
 
 ## HoolIt API Documentation (dweet.io Compatible)
 
@@ -200,7 +205,6 @@ This does essentially the same as `docker run` but uses a configuration file. St
 **However, for production, privacy, or customized setups, it is highly recommended to run your own instance using Docker as described above.**  The public instance is provided as a convenience and may have limitations or be reset periodically.
 
 ---
-
 
 **Contributing:**
 
