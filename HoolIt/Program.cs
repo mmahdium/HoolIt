@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateSlimBuilder(args);
@@ -9,27 +11,69 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 var app = builder.Build();
 
-var sampleTodos = new Todo[]
+var subscribers = new ConcurrentDictionary<string, List<StreamWriter>>();
+
+// HAPI!
+// https://github.com/jheising/HAPI
+var createApi = app.MapGroup("/create/with");
+createApi.MapGet("/{feedId}", async (HttpContext context,string feedId) =>
 {
-    new(1, "Walk the dog"),
-    new(2, "Do the dishes", DateOnly.FromDateTime(DateTime.Now)),
-    new(3, "Do the laundry", DateOnly.FromDateTime(DateTime.Now.AddDays(1))),
-    new(4, "Clean the bathroom"),
-    new(5, "Clean the car", DateOnly.FromDateTime(DateTime.Now.AddDays(2)))
-};
+    var rawQueryData = context.Request.QueryString.ToString();
+    var queryDataDic = context.Request.Query.ToDictionary(k => k.Key, v => v.Value);
+    foreach (var a in queryDataDic)
+    {
+        Console.WriteLine($"""{a.Key}: {a.Value}""");
+    }
+    
+    if (subscribers.TryGetValue(feedId, out var subscribersList))
+    {
+        foreach (var writer in subscribersList)
+        {
+            await writer.WriteLineAsync(rawQueryData);
+            await writer.FlushAsync();
+        }
+    }
+});
 
-var todosApi = app.MapGroup("/todos");
-todosApi.MapGet("/", () => sampleTodos);
-todosApi.MapGet("/{id}", (int id) =>
-    sampleTodos.FirstOrDefault(a => a.Id == id) is { } todo
-        ? Results.Ok(todo)
-        : Results.NotFound());
+var getLiveDataApi = app.MapGroup("/listen/for/data");
+getLiveDataApi.MapGet("/{feedId}", async (CancellationToken cancellationToken,HttpContext context, string feedId) =>
+{
+    context.Response.Headers.ContentType = "text/event-stream";
 
+    var writer = new StreamWriter(context.Response.Body, Encoding.UTF8);
+    subscribers.GetOrAdd(feedId, _ => new List<StreamWriter>()).Add(writer);
+
+    try
+    {
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            await Task.Delay(Timeout.Infinite, cancellationToken);
+        }
+    }
+    catch (OperationCanceledException)
+    {
+    }
+    finally
+    {
+        if (subscribers.TryGetValue(feedId, out var subscribersList))
+        {
+            subscribersList.Remove(writer);
+            if (subscribersList.Count == 0)
+            {
+                subscribers.TryRemove(feedId, out _);
+            }
+
+            await writer.DisposeAsync();
+            Console.WriteLine("Removed subscriber from feed " + feedId);
+        }
+    }
+});
 app.Run();
 
-public record Todo(int Id, string? Title, DateOnly? DueBy = null, bool IsComplete = false);
 
-[JsonSerializable(typeof(Todo[]))]
+
+[JsonSerializable(typeof(string))]
+[JsonSerializable(typeof(Int32))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext
 {
 }
