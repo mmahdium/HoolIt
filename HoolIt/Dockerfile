@@ -1,4 +1,4 @@
-﻿FROM mcr.microsoft.com/dotnet/dotnet/sdk:10.0-alpine3.23-aot AS build
+﻿FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine3.23-aot AS build
 
 # Install NativeAOT build prerequisites
 RUN apk update \
