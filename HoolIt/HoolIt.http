@@ -1,11 +1,22 @@
-@HoolIt_HostAddress = http://localhost:5246
+@HoolIt_HostAddress = http://localhost:5030
 
-GET {{HoolIt_HostAddress}}/todos/
+### Root redirect
+
+GET {{HoolIt_HostAddress}}/
+Accept: text/html
+
+###
+
+### Create a dweet for a feed (query params become content)
+
+GET {{HoolIt_HostAddress}}/dweet/for/my-feed-id?temperature=21.5&status=ok
 Accept: application/json
 
 ###
 
-GET {{HoolIt_HostAddress}}/todos/1
-Accept: application/json
+### Listen for live dweets from a feed (server-sent style, newline-delimited JSON)
+
+GET {{HoolIt_HostAddress}}/listen/for/dweets/from/my-feed-id
+Accept: application/x-ndjson
 
 ###

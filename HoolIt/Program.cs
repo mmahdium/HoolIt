@@ -47,13 +47,13 @@ createApi.MapGet("/{*feedId}", (HttpContext context, string feedId) =>
         With = dweet
     });
 });
-
+// TODO: Add metrics
 // Subscribe endpoint
 var getLiveDataApi = app.MapGroup("/listen/for/dweets/from");
 getLiveDataApi.MapGet("/{*feedId}", async (HttpContext context, string feedId, CancellationToken reqCancellationToken) =>
 {
     context.Response.StatusCode = 200;
-    context.Response.Headers.ContentType = "text/plain; charset=utf-8";
+    context.Response.Headers.ContentType = "application/x-ndjson";
     context.Response.Headers.CacheControl = "no-cache";
     context.Response.Headers["X-Content-Type-Options"] = "nosniff";
 
