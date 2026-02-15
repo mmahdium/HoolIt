@@ -21,7 +21,7 @@ var topicSubscribers = new ConcurrentDictionary<string, ConcurrentDictionary<Gui
 app.MapGet("/", () => Results.Redirect("https://github.com/mmahdium/HoolIt"));
 
 var createApi = app.MapGroup("/dweet/for");
-createApi.MapGet("/{feedId}", (HttpContext context, string feedId) =>
+createApi.MapGet("/{*feedId}", (HttpContext context, string feedId) =>
 {
     var dweet = new Dweet
     {
@@ -50,7 +50,7 @@ createApi.MapGet("/{feedId}", (HttpContext context, string feedId) =>
 
 // Subscribe endpoint
 var getLiveDataApi = app.MapGroup("/listen/for/dweets/from");
-getLiveDataApi.MapGet("/{feedId}", async (HttpContext context, string feedId, CancellationToken reqCancellationToken) =>
+getLiveDataApi.MapGet("/{*feedId}", async (HttpContext context, string feedId, CancellationToken reqCancellationToken) =>
 {
     context.Response.StatusCode = 200;
     context.Response.Headers.ContentType = "text/plain; charset=utf-8";
